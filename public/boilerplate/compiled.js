@@ -250,11 +250,11 @@ module.exports = Boilerplate = (function() {
   fill = function(initial_square, f) {
     var hmm, n, ok, to_explore, visited;
     visited = {};
-    visited["" + initial_square.x + "," + initial_square.y] = true;
+    visited[initial_square.x + "," + initial_square.y] = true;
     to_explore = [initial_square];
     hmm = function(x, y) {
       var k;
-      k = "" + x + "," + y;
+      k = x + "," + y;
       if (!visited[k]) {
         visited[k] = true;
         return to_explore.push({
@@ -507,9 +507,9 @@ module.exports = Boilerplate = (function() {
     return this.scroll_y = (options != null ? options.initialY : void 0) || 0;
   };
 
-  function Boilerplate(el, options) {
+  function Boilerplate(_at_el, options) {
     var _ref1;
-    this.el = el;
+    this.el = _at_el;
     this.keysPressed = 0;
     this.lastKeyScroll = 0;
     this.activeTool = 'move';
@@ -583,7 +583,7 @@ module.exports = Boilerplate = (function() {
           _this.stamp();
         } else {
           if (_this.activeTool === 'move') {
-            v = _this.compiled.grid["" + _this.mouse.tx + "," + _this.mouse.ty];
+            v = _this.compiled.grid[_this.mouse.tx + "," + _this.mouse.ty];
             if (v === 'shuttle' || v === 'thinshuttle') {
               if (_this.needsCompile) {
                 _this.compile();
@@ -675,7 +675,7 @@ module.exports = Boilerplate = (function() {
 
   Boilerplate.prototype.updateCursor = function() {
     var _ref1;
-    return this.canvas.style.cursor = this.activeTool === 'move' && !this.imminent_select ? this.draggedShuttle != null ? '-webkit-grabbing' : (_ref1 = this.compiled.grid["" + this.mouse.tx + "," + this.mouse.ty]) === 'shuttle' || _ref1 === 'thinshuttle' ? '-webkit-grab' : 'default' : 'crosshair';
+    return this.canvas.style.cursor = this.activeTool === 'move' && !this.imminent_select ? this.draggedShuttle != null ? '-webkit-grabbing' : (_ref1 = this.compiled.grid[this.mouse.tx + "," + this.mouse.ty]) === 'shuttle' || _ref1 === 'thinshuttle' ? '-webkit-grab' : 'default' : 'crosshair';
   };
 
   Boilerplate.prototype.resizeTo = function(width, height) {
@@ -736,16 +736,16 @@ module.exports = Boilerplate = (function() {
         v = _ref2[k];
         _ref3 = parseXY(k), x = _ref3.x, y = _ref3.y;
         e = 0;
-        if (!s.points["" + x + "," + (y - 1)]) {
+        if (!s.points[x + "," + (y - 1)]) {
           e = e | 1;
         }
-        if (!s.points["" + (x + 1) + "," + y]) {
+        if (!s.points[(x + 1) + "," + y]) {
           e = e | 2;
         }
-        if (!s.points["" + x + "," + (y + 1)]) {
+        if (!s.points[x + "," + (y + 1)]) {
           e = e | 4;
         }
-        if (!s.points["" + (x - 1) + "," + y]) {
+        if (!s.points[(x - 1) + "," + y]) {
           e = e | 8;
         }
         s.edges[k] = e;
@@ -1068,20 +1068,20 @@ module.exports = Boilerplate = (function() {
         }
         this.ctx.fillRect(px2, py2, sizex, sizey);
         this.ctx.fillStyle = Boilerplate.colors.nothing;
-        if ((e & 0x9) === 0 && !shuttle.points["" + (x - 1) + "," + (y - 1)]) {
+        if ((e & 0x9) === 0 && !shuttle.points[(x - 1) + "," + (y - 1)]) {
           this.ctx.fillRect(px, py, b, b);
         }
-        if ((e & 0x3) === 0 && !shuttle.points["" + (x + 1) + "," + (y - 1)]) {
+        if ((e & 0x3) === 0 && !shuttle.points[(x + 1) + "," + (y - 1)]) {
           this.ctx.fillRect(px + this.size - b, py, b, b);
         }
-        if ((e & 0x6) === 0 && !shuttle.points["" + (x + 1) + "," + (y + 1)]) {
+        if ((e & 0x6) === 0 && !shuttle.points[(x + 1) + "," + (y + 1)]) {
           this.ctx.fillRect(px + this.size - b, py + this.size - b, b, b);
         }
-        if ((e & 0xc) === 0 && !shuttle.points["" + (x - 1) + "," + (y + 1)]) {
+        if ((e & 0xc) === 0 && !shuttle.points[(x - 1) + "," + (y + 1)]) {
           this.ctx.fillRect(px, py + this.size - b, b, b);
         }
         if (v === 'thinshuttle') {
-          k2 = state ? "" + (x + state.dx) + "," + (y + state.dy) : k;
+          k2 = state ? (x + state.dx) + "," + (y + state.dy) : k;
           rid = (_ref4 = shuttle.adjacentTo[k2]) != null ? _ref4[stateid || 0] : void 0;
           if (rid != null) {
             p = this.compiled.getPressure(rid);
@@ -1106,7 +1106,7 @@ module.exports = Boilerplate = (function() {
       return;
     }
     if (v === 'bridge') {
-      return [this.compiled.ast.edgeGrid["" + k + ",true"], this.compiled.ast.edgeGrid["" + k + ",false"]];
+      return [this.compiled.ast.edgeGrid[k + ",true"], this.compiled.ast.edgeGrid[k + ",false"]];
     } else if (v) {
       if ((sid = this.compiled.ast.shuttleGrid[k]) != null) {
         shuttle = this.compiled.ast.shuttles[sid];
@@ -1125,7 +1125,7 @@ module.exports = Boilerplate = (function() {
     my = this.mouse.y;
     _ref1 = this.screenToWorld(mx, my), mtx = _ref1.tx, mty = _ref1.ty;
     if (!this.needsCompile && this.activeTool === 'move' && !this.selection && !this.imminent_select) {
-      k = "" + mtx + "," + mty;
+      k = mtx + "," + mty;
       rids = this.getRegionId(k);
       if (Array.isArray(rids)) {
         hoverZone = this.compiled.getZone(rids[0]);
@@ -1170,13 +1170,13 @@ module.exports = Boilerplate = (function() {
           continue;
         }
         if (v === 'bridge') {
-          topColor = getShadeColor(this.compiled.ast.edgeGrid["" + k + ",true"]);
+          topColor = getShadeColor(this.compiled.ast.edgeGrid[k + ",true"]);
           b = (this.size / 4 + 1) | 0;
           if (topColor) {
             this.ctx.fillStyle = topColor;
             this.ctx.fillRect(px + b, py, this.size - 2 * b, this.size);
           }
-          leftColor = getShadeColor(this.compiled.ast.edgeGrid["" + k + ",false"]);
+          leftColor = getShadeColor(this.compiled.ast.edgeGrid[k + ",false"]);
           if (leftColor) {
             this.ctx.fillStyle = leftColor;
             this.ctx.fillRect(px, py + b, this.size, this.size - 2 * b);
@@ -1252,7 +1252,7 @@ module.exports = Boilerplate = (function() {
         if (this.activeTool !== 'move') {
           this.ctx.fillStyle = Boilerplate.colors[(_ref8 = this.activeTool) != null ? _ref8 : 'solid'];
           this.ctx.fillRect(mpx + this.size / 4, mpy + this.size / 4, this.size / 2, this.size / 2);
-          this.ctx.strokeStyle = this.compiled.grid["" + mtx + "," + mty] ? 'black' : 'white';
+          this.ctx.strokeStyle = this.compiled.grid[mtx + "," + mty] ? 'black' : 'white';
           this.ctx.strokeRect(mpx + 1, mpy + 1, this.size - 2, this.size - 2);
         }
       }
@@ -1422,7 +1422,7 @@ exports.WebGLContext = WebGLContext;
 
 
 },{}],"/Users/josephg/src/b/boilerplate/node_modules/boilerplate-compiler/index.js":[function(require,module,exports){
-// Generated by CoffeeScript 1.8.0
+// Generated by CoffeeScript 1.9.0
 (function() {
   var gen, parse, parseFile, _ref;
 
@@ -1458,7 +1458,7 @@ exports.WebGLContext = WebGLContext;
 
 },{"./js-codegen":"/Users/josephg/src/b/boilerplate/node_modules/boilerplate-compiler/js-codegen.js","./parser":"/Users/josephg/src/b/boilerplate/node_modules/boilerplate-compiler/parser.js","./util":"/Users/josephg/src/b/boilerplate/node_modules/boilerplate-compiler/util.js"}],"/Users/josephg/src/b/boilerplate/node_modules/boilerplate-compiler/js-codegen.js":[function(require,module,exports){
 (function (process){
-// Generated by CoffeeScript 1.8.0
+// Generated by CoffeeScript 1.9.0
 (function() {
   var data, emitForceExpr, emitRegionCalcBody, filename, gen, indentedStream, intArray, parseFile, shuttleInAnyState, shuttleInRangeExpr, uintArray, util,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -1515,14 +1515,14 @@ exports.WebGLContext = WebGLContext;
   shuttleInRangeExpr = function(dest, numStates, stateExpr, base, distance) {
     var end;
     if (distance === 1 && numStates > 0) {
-      dest.push("" + stateExpr + " === " + base);
+      dest.push(stateExpr + " === " + base);
     } else {
       end = base + distance;
       if (base && base > 0) {
-        dest.push("" + stateExpr + " >= " + base);
+        dest.push(stateExpr + " >= " + base);
       }
       if (end < numStates) {
-        dest.push("" + stateExpr + " < " + end);
+        dest.push(stateExpr + " < " + end);
       }
     }
     return dest;
@@ -1547,17 +1547,17 @@ exports.WebGLContext = WebGLContext;
         if (region) {
           end = region.base + region.distance;
           if (region.distance === 1 || (region.distance === 2 && (region.base !== 0 && end !== stateList.length))) {
-            orClauses.push("" + stateExpr + " === " + region.base);
+            orClauses.push(stateExpr + " === " + region.base);
             if (region.distance === 2) {
-              orClauses.push("" + stateExpr + " === " + (region.base + 1));
+              orClauses.push(stateExpr + " === " + (region.base + 1));
             }
           } else {
             ands = [];
             if (region.base > 0) {
-              ands.push("" + stateExpr + " >= " + region.base);
+              ands.push(stateExpr + " >= " + region.base);
             }
             if (end < stateList.length) {
-              ands.push("" + stateExpr + " < " + end);
+              ands.push(stateExpr + " < " + end);
             }
             orClauses.push(ands.join(' && '));
           }
@@ -1721,7 +1721,7 @@ exports.WebGLContext = WebGLContext;
             rid: p.rid,
             mult: mult
           });
-          key += "" + p.rid + " " + mult + " ";
+          key += p.rid + " " + mult + " ";
         }
         if (stateforce.list.length === 0) {
           lastKey = null;
@@ -1760,7 +1760,7 @@ exports.WebGLContext = WebGLContext;
     forceExpr = function(mult, rid) {
       var multExpr;
       multExpr = mult === 1 ? '+' : mult === -1 ? '-' : "+ " + mult + "*";
-      return "" + multExpr + " " + (pressureExpr(rid));
+      return multExpr + " " + (pressureExpr(rid));
     };
     writeForceExpr = function(list) {
       return W.block(function() {
@@ -1850,6 +1850,8 @@ exports.WebGLContext = WebGLContext;
       if (emittedOne) {
         W("0;");
         W.indentation--;
+      } else if (!isAlreadySet) {
+        W("force = 0;");
       }
       W("switch(state) {");
       W.block(function() {
@@ -2208,8 +2210,7 @@ exports.WebGLContext = WebGLContext;
     data = parseFile(filename);
     gen(data, process.stdout, {
       module: 'node',
-      extraFns: true,
-      fillMode: 'all'
+      fillMode: 'engines'
     });
   }
 
@@ -2220,7 +2221,7 @@ exports.WebGLContext = WebGLContext;
 }).call(this,require('_process'))
 },{"./parser":"/Users/josephg/src/b/boilerplate/node_modules/boilerplate-compiler/parser.js","./util":"/Users/josephg/src/b/boilerplate/node_modules/boilerplate-compiler/util.js","_process":"/usr/local/share/npm/lib/node_modules/watchify/node_modules/browserify/node_modules/process/browser.js"}],"/Users/josephg/src/b/boilerplate/node_modules/boilerplate-compiler/parser.js":[function(require,module,exports){
 (function (process){
-// Generated by CoffeeScript 1.8.0
+// Generated by CoffeeScript 1.9.0
 (function() {
   var Parser, c, data, dirs, edges, filename, fill, fillRegions, graphFile, gridExtents, k, numKeys, numericSort, parse, parseFile, parseXY, printEdges, printGrid, r, regions, rid, s, shuttles, sid, sortedKeys, state, util, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _ref3;
 
@@ -2285,8 +2286,8 @@ exports.WebGLContext = WebGLContext;
   };
 
   Parser = (function() {
-    function Parser(grid) {
-      this.grid = grid;
+    function Parser(_at_grid) {
+      this.grid = _at_grid;
       this.shuttleGrid = {};
       this.engineGrid = {};
       this.edgeGrid = {};
@@ -2297,7 +2298,7 @@ exports.WebGLContext = WebGLContext;
     }
 
     Parser.prototype.get = function(x, y) {
-      return this.grid["" + x + "," + y];
+      return this.grid[x + "," + y];
     };
 
     Parser.prototype.printPoint = function(x, y) {
@@ -2305,9 +2306,9 @@ exports.WebGLContext = WebGLContext;
       return util.printPoint(this.extents, this.grid, x, y);
     };
 
-    Parser.prototype.parse = function(opts) {
+    Parser.prototype.parse = function(_at_opts) {
       var e, s, sid, _i, _j, _len, _len1, _ref1, _ref2;
-      this.opts = opts != null ? opts : {};
+      this.opts = _at_opts != null ? _at_opts : {};
       this.debug || (this.debug = this.opts.debug);
       this.opts.expensiveOptimizations = true;
       if (this.opts.debug) {
@@ -2357,11 +2358,11 @@ exports.WebGLContext = WebGLContext;
               pressure: pressure,
               regions: []
             });
-            _results.push(this.engineGrid["" + x + "," + y] = id);
+            _results.push(this.engineGrid[x + "," + y] = id);
             break;
           case 'shuttle':
           case 'thinshuttle':
-            if (this.shuttleGrid["" + x + "," + y] != null) {
+            if (this.shuttleGrid[x + "," + y] != null) {
               continue;
             }
             id = this.shuttles.length;
@@ -2387,8 +2388,8 @@ exports.WebGLContext = WebGLContext;
                   if (s.immobile && _this.get(x, y) === 'shuttle') {
                     s.immobile = false;
                   }
-                  _this.shuttleGrid["" + x + "," + y] = id;
-                  s.points["" + x + "," + y] = v;
+                  _this.shuttleGrid[x + "," + y] = id;
+                  s.points[x + "," + y] = v;
                   return true;
                 } else {
                   return false;
@@ -2414,7 +2415,7 @@ exports.WebGLContext = WebGLContext;
           var k, otherSid, x, y, _ref1, _ref2;
           for (k in s.points) {
             _ref1 = parseXY(k), x = _ref1.x, y = _ref1.y;
-            k = "" + (x + dx) + "," + (y + dy);
+            k = (x + dx) + "," + (y + dy);
             otherSid = _this.shuttleGrid[k];
             if ((otherSid != null) && otherSid !== sid) {
               console.warn("Potentially overlapping shuttles at " + k);
@@ -2459,7 +2460,7 @@ exports.WebGLContext = WebGLContext;
           _ref3 = parseXY(k), x = _ref3.x, y = _ref3.y;
           _x = x + dx;
           _y = y + dy;
-          k = "" + _x + "," + _y;
+          k = _x + "," + _y;
           this.shuttleGrid[k] = sid;
           if (v === 'shuttle') {
             f = ((_base = s.fill)[k] != null ? _base[k] : _base[k] = []);
@@ -2483,7 +2484,7 @@ exports.WebGLContext = WebGLContext;
           _ref4 = s.states;
           for (stateid = _j = 0, _len1 = _ref4.length; _j < _len1; stateid = ++_j) {
             _ref5 = _ref4[stateid], dx = _ref5.dx, dy = _ref5.dy;
-            stateGrid["" + dx + "," + dy] = stateid;
+            stateGrid[dx + "," + dy] = stateid;
           }
           ds = [
             {
@@ -2508,7 +2509,7 @@ exports.WebGLContext = WebGLContext;
               _results = [];
               for (i = _l = 0, _len3 = ds.length; _l < _len3; i = ++_l) {
                 _ref7 = ds[i], dx = _ref7.dx, dy = _ref7.dy;
-                _results.push((_ref8 = stateGrid["" + (state.dx + dx) + "," + (state.dy + dy)]) != null ? _ref8 : stateid);
+                _results.push((_ref8 = stateGrid[(state.dx + dx) + "," + (state.dy + dy)]) != null ? _ref8 : stateid);
               }
               return _results;
             })();
@@ -2520,7 +2521,7 @@ exports.WebGLContext = WebGLContext;
 
     Parser.prototype.makeRegionFrom = function(x, y, isTop) {
       var check, containedEngines, eid, f, hmm, i, k, n, ox, oy, pressure, r, rid, sid, to_explore, v, visited, _i, _len, _ref1;
-      k = "" + x + "," + y + "," + isTop;
+      k = x + "," + y + "," + isTop;
       rid = this.edgeGrid[k];
       if (rid !== void 0) {
         return this.regions[rid];
@@ -2539,7 +2540,7 @@ exports.WebGLContext = WebGLContext;
       containedEngines = {};
       hmm = (function(_this) {
         return function(x, y, isTop) {
-          k = "" + x + "," + y + "," + isTop;
+          k = x + "," + y + "," + isTop;
           if (visited[k] === void 0 && _this.edgeGrid[k] === void 0) {
             visited[k] = _this.edgeGrid[k] = rid;
             return to_explore.push({
@@ -2584,7 +2585,7 @@ exports.WebGLContext = WebGLContext;
         ];
         for (i = _i = 0, _len = check.length; _i < _len; i = ++_i) {
           _ref1 = check[i], x = _ref1.x, y = _ref1.y, ox = _ref1.ox, oy = _ref1.oy, f = _ref1.f;
-          k = "" + x + "," + y;
+          k = x + "," + y;
           sid = this.shuttleGrid[k];
           v = this.grid[k];
           if (sid !== void 0) {
@@ -2615,7 +2616,7 @@ exports.WebGLContext = WebGLContext;
               break;
             case 'positive':
             case 'negative':
-              containedEngines[this.engineGrid["" + x + "," + y]] = v === 'positive' ? 1 : -1;
+              containedEngines[this.engineGrid[x + "," + y]] = v === 'positive' ? 1 : -1;
           }
         }
       }
@@ -2651,7 +2652,7 @@ exports.WebGLContext = WebGLContext;
           _results1 = [];
           for (_i = 0, _len = edges.length; _i < _len; _i++) {
             _ref3 = edges[_i], ex = _ref3.ex, ey = _ref3.ey, isTop = _ref3.isTop, dx = _ref3.dx, dy = _ref3.dy;
-            if (letsAirThrough[v] || letsAirThrough[this.get(x + dx, y + dy)] || this.shuttleGrid["" + (x + dx) + "," + (y + dy)] !== void 0) {
+            if (letsAirThrough[v] || letsAirThrough[this.get(x + dx, y + dy)] || this.shuttleGrid[(x + dx) + "," + (y + dy)] !== void 0) {
               _results1.push(this.makeRegionFrom(x + ex, y + ey, isTop));
             }
           }
@@ -2665,7 +2666,7 @@ exports.WebGLContext = WebGLContext;
       var c, numStates, r, _base, _name;
       r = this.regions[rid1];
       numStates = this.shuttles[sid].states.length;
-      c = ((_base = r.connections)[_name = "" + rid2 + "," + sid] || (_base[_name] = {
+      c = ((_base = r.connections)[_name = rid2 + "," + sid] || (_base[_name] = {
         rid: rid2,
         sid: sid,
         inStates: new Array(numStates)
@@ -2690,7 +2691,7 @@ exports.WebGLContext = WebGLContext;
           _ref3 = s.states;
           for (stateid = _k = 0, _len2 = _ref3.length; _k < _len2; stateid = ++_k) {
             state = _ref3[stateid];
-            filledStates = s.fill["" + x + "," + y];
+            filledStates = s.fill[x + "," + y];
             push = ((_base = state.tempPushedBy)[rid] || (_base[rid] = {
               mx: 0,
               my: 0
@@ -2705,7 +2706,7 @@ exports.WebGLContext = WebGLContext;
               fill(e, (function(_this) {
                 return function(x, y, hmm) {
                   var adjList, dx, dy, ex, ey, isTop, k, rid2, _base1, _l, _len3, _name, _ref4, _ref5;
-                  k = "" + x + "," + y;
+                  k = x + "," + y;
                   if (_this.shuttleGrid[k] !== sid) {
                     return false;
                   }
@@ -2713,7 +2714,7 @@ exports.WebGLContext = WebGLContext;
                   if (filledStates && filledStates[stateid]) {
                     return false;
                   }
-                  adjList = ((_base1 = s.adjacentTo)[_name = "" + x + "," + y] || (_base1[_name] = []));
+                  adjList = ((_base1 = s.adjacentTo)[_name = x + "," + y] || (_base1[_name] = []));
                   if (adjList[stateid] != null) {
                     return false;
                   }
@@ -2724,12 +2725,12 @@ exports.WebGLContext = WebGLContext;
                   adjList[stateid] = rid;
                   for (_l = 0, _len3 = edges.length; _l < _len3; _l++) {
                     _ref4 = edges[_l], ex = _ref4.ex, ey = _ref4.ey, isTop = _ref4.isTop, dx = _ref4.dx, dy = _ref4.dy;
-                    rid2 = _this.edgeGrid["" + (x + ex) + "," + (y + ey) + "," + isTop];
+                    rid2 = _this.edgeGrid[(x + ex) + "," + (y + ey) + "," + isTop];
                     if (rid2 !== void 0 && rid2 !== rid) {
                       _this.addConnection(rid, rid2, sid, stateid);
                       _this.addConnection(rid2, rid, sid, stateid);
                     }
-                    if ((_ref5 = s.fill["" + (x + dx) + "," + (y + dy)]) != null ? _ref5[stateid] : void 0) {
+                    if ((_ref5 = s.fill[(x + dx) + "," + (y + dy)]) != null ? _ref5[stateid] : void 0) {
                       if (_this.debug) {
                         console.log('inside push', x, y, {
                           dx: dx,
@@ -2986,7 +2987,7 @@ exports.WebGLContext = WebGLContext;
 }).call(this,require('_process'))
 },{"./util":"/Users/josephg/src/b/boilerplate/node_modules/boilerplate-compiler/util.js","_process":"/usr/local/share/npm/lib/node_modules/watchify/node_modules/browserify/node_modules/process/browser.js","fs":"/usr/local/share/npm/lib/node_modules/watchify/node_modules/browserify/lib/_empty.js"}],"/Users/josephg/src/b/boilerplate/node_modules/boilerplate-compiler/util.js":[function(require,module,exports){
 (function (process){
-// Generated by CoffeeScript 1.8.0
+// Generated by CoffeeScript 1.9.0
 (function() {
   var chars, intersectListOrNull, numKeys, parseXY, printCustomGrid,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -3022,11 +3023,11 @@ exports.WebGLContext = WebGLContext;
   exports.fill = function(initial_square, f) {
     var hmm, n, ok, to_explore, visited;
     visited = {};
-    visited["" + initial_square.x + "," + initial_square.y] = true;
+    visited[initial_square.x + "," + initial_square.y] = true;
     to_explore = [initial_square];
     hmm = function(x, y) {
       var k;
-      k = "" + x + "," + y;
+      k = x + "," + y;
       if (!visited[k]) {
         visited[k] = true;
         return to_explore.push({
@@ -3179,7 +3180,7 @@ exports.WebGLContext = WebGLContext;
     }
     edgeChar = function(x, y, isTop) {
       var e;
-      e = edgeGrid["" + x + "," + y + "," + isTop];
+      e = edgeGrid[x + "," + y + "," + isTop];
       if (e != null) {
         return e % 10;
       } else {
@@ -3317,7 +3318,7 @@ exports.WebGLContext = WebGLContext;
     for (k in _ref1) {
       v = _ref1[k];
       _ref2 = parseXY(k), x = _ref2.x, y = _ref2.y;
-      k = "" + (x + dx) + "," + (y + dy);
+      k = (x + dx) + "," + (y + dy);
       if (grid[k] !== v) {
         throw 'Shuttle not in state';
       }
@@ -3329,7 +3330,7 @@ exports.WebGLContext = WebGLContext;
     for (k in _ref4) {
       v = _ref4[k];
       _ref5 = parseXY(k), x = _ref5.x, y = _ref5.y;
-      k = "" + (x + dx) + "," + (y + dy);
+      k = (x + dx) + "," + (y + dy);
       _results.push(grid[k] = v);
     }
     return _results;
