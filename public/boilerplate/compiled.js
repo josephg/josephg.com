@@ -530,7 +530,7 @@ module.exports = Boilerplate = (function() {
     } else {
       console.log("using canvas");
     }
-    this.resizeTo(el.offsetWidth, el.offsetHeight);
+    this.resizeTo(this.el.offsetWidth, this.el.offsetHeight);
     this.mouse = {
       x: null,
       y: null,
